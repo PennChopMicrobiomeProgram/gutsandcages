@@ -28,7 +28,7 @@ devtools::install_github("huw/gutsandcages")
 
 ## Example
 
-```{r message=FALSE}
+```{r message=FALSE, warning=FALSE}
 library(tidyverse)
 library(pwr)
 library(ggplot2)

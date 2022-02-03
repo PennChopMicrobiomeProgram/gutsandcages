@@ -1,0 +1,33 @@
+Package: gutsandcages
+Title: Optimal experimental design for gut microbiome studies
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Weiming",
+           family = "Hu",
+           role = c("aut", "cre"),
+           email = "huweiming2009@gmail.com",
+           comment = c(ORCID = "0000-0003-0794-2167"))
+Description: This package can be used to check the statistic power of your future 
+    experimental design on mouse gut microbiome
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+URL: https://github.research.chop.edu/huw/gutsandcages
+BugReports: https://github.research.chop.edu/huw/gutsandcages/issues
+Imports: 
+    lmerTest,
+    dplyr,
+    tibble,
+    tidyr,
+    nlme,
+    magrittr,
+    broom,
+    broom.mixed,
+    furrr,
+    purrr,
+    pwr

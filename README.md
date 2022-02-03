@@ -21,29 +21,7 @@ devtools::install_github("huw/gutsandcages")
 
 ``` r
 library(tidyverse)
-```
-
-    ## Warning: package 'tidyverse' was built under R version 4.0.2
-
-    ## Warning: package 'ggplot2' was built under R version 4.0.2
-
-    ## Warning: package 'tibble' was built under R version 4.0.2
-
-    ## Warning: package 'tidyr' was built under R version 4.0.2
-
-    ## Warning: package 'readr' was built under R version 4.0.2
-
-    ## Warning: package 'dplyr' was built under R version 4.0.2
-
-    ## Warning: package 'forcats' was built under R version 4.0.2
-
-``` r
 library(pwr)
-```
-
-    ## Warning: package 'pwr' was built under R version 4.0.2
-
-``` r
 library(ggplot2)
 ```
 

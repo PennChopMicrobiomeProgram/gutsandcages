@@ -8,7 +8,7 @@ output: github_document
 knitr::opts_chunk$set(fig.path = "man/figures/README-")
 ```
 
-```{r echo=FALSE, message=FALSE}
+```{r echo=FALSE, message=FALSE, warning=FALSE, eval = FALSE}
 devtools::load_all()
 ```
 
@@ -21,9 +21,9 @@ experiments in mice and rats.
 
 You can install the development version with:
 
-``` r
+```{r eval = FALSE}
 # install.packages("devtools")
-devtools::install_github("huw/gutsandcages")
+devtools::install_github("PennChopMicrobiomeProgram/gutsandcages")
 ```
 
 ## Example
@@ -32,6 +32,8 @@ devtools::install_github("huw/gutsandcages")
 library(tidyverse)
 library(pwr)
 library(ggplot2)
+library(gutsandcages)
+library(future)
 ```
 
 The `gutsandcages` library computes statistical power by simulation. For a
@@ -89,8 +91,7 @@ Because simulation takes long time, `get_power` also implement features that you
 Here is an example:
 ```{r eval= FALSE}
 library(future)
-plan(multicore) ##only works for mac and R session
-#plan(multisession)
+plan(multisession) 
  sim_test<- get_power(expt,d = seq(0.5, 2, by = 0.01), p = 0, nsim = 200)
 ```
 
@@ -110,17 +111,18 @@ Let's look at how different ICC affect the power. Compare different ICC, from lo
 Black dashed line is reference power from t test ncage = 10, and red dashed line is t test ncage = 50
 ```{r}
 expt_icc <- make_expt(ncage_treatment = 10, mice_per_cage_treatment = 5)
-icc_r <- get_power(expt_icc, seq(0.5, 3, by = 0.1), c(0.1, 0.5, 0.9)) %>%
+plan(multisession) 
+icc_r <- get_power(expt_icc, seq(0.5, 3, by = 0.1), c(0.1, 0.5, 0.9), nsim = 1000) %>%
   mutate(ICC = paste0(rep(c("low","medium", "high"), time = n()/3))) %>%
   select(-t_test_power)
 
-no_icc_r <- get_power(make_expt(ncage_treatment = 10, mice_per_cage_treatment = 1), seq(0.5, 3, by = 0.1), p = 0, nsim = 100) %>%
+no_icc_r <- get_power(make_expt(ncage_treatment = 10, mice_per_cage_treatment = 1), seq(0.5, 3, by = 0.1), p = 0, nsim = 1000) %>%
   mutate(p = 0) %>%
   mutate(ICC = "No")
 
 no_icc_r_m <- no_icc_r %>% select(-t_test_power)
 
-no_icc_50 <- get_power(make_expt(ncage_treatment = 50, mice_per_cage_treatment = 1), seq(0.5, 3, by = 0.1), p = 0, nsim = 100) %>%
+no_icc_50 <- get_power(make_expt(ncage_treatment = 50, mice_per_cage_treatment = 1), seq(0.5, 3, by = 0.1), p = 0, nsim = 1000) %>%
   rename(t_test_power2 = t_test_power)
 
 rbind(icc_r, no_icc_r_m) %>%

@@ -1,8 +1,6 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-    ## Warning: package 'testthat' was built under R version 4.0.2
-
 # gutsandcages
 
 The goal of `gutsandcages` is to estimate statistical power for
@@ -14,7 +12,7 @@ You can install the development version with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("huw/gutsandcages")
+devtools::install_github("PennChopMicrobiomeProgram/gutsandcages")
 ```
 
 ## Example
@@ -23,6 +21,8 @@ devtools::install_github("huw/gutsandcages")
 library(tidyverse)
 library(pwr)
 library(ggplot2)
+library(gutsandcages)
+library(future)
 ```
 
 The `gutsandcages` library computes statistical power by simulation. For
@@ -86,8 +86,7 @@ example:
 
 ``` r
 library(future)
-plan(multicore) ##only works for mac and R session
-#plan(multisession)
+plan(multisession) 
  sim_test<- get_power(expt,d = seq(0.5, 2, by = 0.01), p = 0, nsim = 200)
 ```
 
@@ -121,17 +120,18 @@ from t test ncage = 10, and red dashed line is t test ncage = 50
 
 ``` r
 expt_icc <- make_expt(ncage_treatment = 10, mice_per_cage_treatment = 5)
-icc_r <- get_power(expt_icc, seq(0.5, 3, by = 0.1), c(0.1, 0.5, 0.9)) %>%
+plan(multisession) 
+icc_r <- get_power(expt_icc, seq(0.5, 3, by = 0.1), c(0.1, 0.5, 0.9), nsim = 1000) %>%
   mutate(ICC = paste0(rep(c("low","medium", "high"), time = n()/3))) %>%
   select(-t_test_power)
 
-no_icc_r <- get_power(make_expt(ncage_treatment = 10, mice_per_cage_treatment = 1), seq(0.5, 3, by = 0.1), p = 0, nsim = 100) %>%
+no_icc_r <- get_power(make_expt(ncage_treatment = 10, mice_per_cage_treatment = 1), seq(0.5, 3, by = 0.1), p = 0, nsim = 1000) %>%
   mutate(p = 0) %>%
   mutate(ICC = "No")
 
 no_icc_r_m <- no_icc_r %>% select(-t_test_power)
 
-no_icc_50 <- get_power(make_expt(ncage_treatment = 50, mice_per_cage_treatment = 1), seq(0.5, 3, by = 0.1), p = 0, nsim = 100) %>%
+no_icc_50 <- get_power(make_expt(ncage_treatment = 50, mice_per_cage_treatment = 1), seq(0.5, 3, by = 0.1), p = 0, nsim = 1000) %>%
   rename(t_test_power2 = t_test_power)
 
 rbind(icc_r, no_icc_r_m) %>%
@@ -147,4 +147,4 @@ rbind(icc_r, no_icc_r_m) %>%
   geom_line(aes(y=t_test_power2), linetype = "dashed", color = "darkred")
 ```
 
-![](man/figures/README-unnamed-chunk-9-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-10-1.png)<!-- -->
